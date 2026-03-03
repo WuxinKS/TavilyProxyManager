@@ -112,10 +112,27 @@ docker logs tavily-proxy 2>&1 | grep "master key"
 - **Windows**: `.\scripts\build_all.ps1`
 - **Linux/macOS**: `./scripts/build_all.sh`
 
-**使用 Dockerfile 本地构建镜像**:
+**使用 Dockerfile 构建镜像（Buildx）**:
+
+首次使用可先初始化 Buildx：
 
 ```bash
-docker build -t my-tavily-proxy .
+docker buildx create --use
+```
+
+本地构建（当前主机架构）：
+
+```bash
+docker buildx build --load -t my-tavily-proxy .
+```
+
+构建并推送多架构镜像（`amd64` + `arm64`）：
+
+```bash
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t ghcr.io/<owner>/<repo>:latest \
+  --push .
 ```
 
 ---
